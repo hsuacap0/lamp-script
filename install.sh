@@ -1,7 +1,7 @@
-#!/bin/bash
-
+#!/usr/bin/bash
+DEBIAN_FRONTEND=noninteractive
 user_input() {
-intf "%s" "Please enter your desired MySQL root crendentials: "
+    printf "%s" "Please enter your desired MySQL root crendentials: "
     read -s secret
     echo ""
     printf "%s" "Please enter the PHP versions that you would like to install: "
@@ -39,36 +39,19 @@ certbot () {
     snap install certbot --classic
 }
 
-mysql () {
+mysql_install () {
     echo "Installing MySQL..."
     sleep 5
     apt install mysql-server -y
     echo "Resetting MySQL root password and disable passwordless login"
-    mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'pass';"
-    expect -c "
-spawn mysql_secure_installation
-expect \"Enter current password for root (enter for none):\"
-send \"pass\r\"
-expect \"Set root password?\"
-send \"Y\r\"
-expect \"New password:\"
-send \"$secret\r\"
-expect \"Re-enter new password:\"
-send \"$secret\r\"
-expect \"Remove anonymous users?\"
-send \"Y\r\"
-expect \"Disallow root login remotely?\"
-send \"Y\r\"
-expect \"Remove test database and access to it?\"
-send \"Y\r\"
-expect \"Reload privilege tables now?\"
-send \"Y\r\"
-interact
-"
 
 }
 
-done () {
+mysql_reset () {
+    mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$secret';"
+}
+
+idone () {
     echo "LAMP Installation completed!"
     echo "Below are MySQL root crendentials..."
     echo "Secret: $secret"
@@ -79,4 +62,6 @@ system_update
 nginx
 php
 certbot
-mysql
+mysql_install
+mysql_reset
+idone
