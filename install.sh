@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 DEBIAN_FRONTEND=noninteractive
+echo "\$nrconf{restart} = 'a'" >> /etc/needrestart/needrestart.conf
 user_input() {
     printf "%s" "Please enter your desired MySQL root crendentials: "
     read -s secret
