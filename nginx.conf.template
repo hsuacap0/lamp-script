@@ -1,0 +1,23 @@
+server {
+    listen 80
+    root /home/$username/public_html/;
+    index index.php index.html index.htm;
+    server_name $domain_name;
+    location / {
+        # try_files $uri $uri/ /index.php;
+        # try_files $uri $uri/ /index.php?$args; # for wordpress
+        try_files $uri $uri/ /index.php?$query_string; # for laravel
+
+    }
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/$username.sock;
+
+    }
+    location ~ /\.ht {
+        deny all;
+
+    }
+    access_log /var/log/nginx/$domain_name.access.log main;
+    error_log  /var/log/nginx/$domain_name.error.log warn;
+}
