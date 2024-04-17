@@ -34,7 +34,6 @@ system_update() {
     echo -e "${YELLOW}[*]${NC} Starting system update..."
     sleep 2
     apt update -y >/dev/null 2>&1 &
-    apt upgrade -y >/dev/null 2>&1 &
     fetch_pid=$!
     show_loading $fetch_pid
     if [ $? -ne 0 ]; then
